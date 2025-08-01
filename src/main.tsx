@@ -1,13 +1,15 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Layout from '@/layout';
-import BookPage from 'pages/client/book';
-import AboutPage from 'pages/client/about';
-import LoginPage from 'pages/client/auth/login';
-import RegisterPage from 'pages/client/auth/register';
-import 'styles/global.scss'
-import HomePage from 'pages/client/home';
+import Layout from "@/layout";
+import BookPage from "pages/client/book";
+import AboutPage from "pages/client/about";
+import LoginPage from "pages/client/auth/login";
+import RegisterPage from "pages/client/auth/register";
+import "styles/global.scss";
+import HomePage from "pages/client/home";
+import { App } from "antd";
+import { AppProvider } from "components/context/app.context";
 
 const router = createBrowserRouter([
   {
@@ -16,7 +18,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <HomePage/>,
+        element: <HomePage />,
       },
       {
         path: "/book",
@@ -40,6 +42,10 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <App>
+      <AppProvider>
+        <RouterProvider router={router} />
+      </AppProvider>
+    </App>
   </StrictMode>
 );

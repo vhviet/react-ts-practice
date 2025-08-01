@@ -1,0 +1,77 @@
+.login-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #ece9e6, #ffffff);
+
+  .main {
+    width: 100%;
+    max-width: 420px;
+    padding: 2rem;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  }
+
+  .container {
+    width: 100%;
+  }
+
+  .wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .heading {
+    text-align: center;
+
+    .text-large {
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  .text-normal {
+    font-size: 0.95rem;
+    color: #666;
+
+    a {
+      color: #1890ff;
+      text-decoration: none;
+      transition: color 0.2s ease;
+
+      &:hover {
+        color: #40a9ff;
+      }
+    }
+  }
+
+  .ant-form-item {
+    margin-bottom: 1rem;
+  }
+
+  .ant-input {
+    border-radius: 6px;
+  }
+
+  .ant-btn-primary {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 6px;
+    font-weight: 500;
+  }
+
+  @media (max-width: 480px) {
+    .main {
+      padding: 1.5rem;
+    }
+
+    .text-large {
+      font-size: 1.5rem;
+    }
+  }
+}
