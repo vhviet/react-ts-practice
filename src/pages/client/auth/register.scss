@@ -1,0 +1,83 @@
+.register-page {
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #f6f6f6, #e9ecef);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+
+  .main {
+    width: 100%;
+    max-width: 500px;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .container {
+    width: 100%;
+  }
+
+  .wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .heading {
+    text-align: center;
+
+    .text-large {
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    .ant-form-item-label {
+      text-align: left;
+      font-weight: 500;
+    }
+
+    .ant-input,
+    .ant-input-password {
+    //   padding: 0.6rem 1rem;
+      font-size: 1rem;
+      border-radius: 6px;
+    }
+
+    .ant-btn-primary {
+      width: 100%;
+      font-weight: 600;
+      padding: 0.6rem;
+      background-color: #1677ff;
+      border-color: #1677ff;
+
+      &:hover {
+        background-color: #145fd2;
+        border-color: #145fd2;
+      }
+    }
+
+    p.text-normal {
+      margin-top: 1rem;
+      font-size: 0.95rem;
+      color: #555;
+
+      a {
+        color: #1677ff;
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
