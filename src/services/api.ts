@@ -19,3 +19,17 @@ export const registerAPI = (
     phone,
   });
 };
+
+export const fetchAccountAPI = () => {
+  const urlBackend = "/api/v1/auth/account";
+  return axios.get<IBackendRes<IFetchAcc>>(urlBackend, {
+    headers: {
+      delay: 1000,
+    }
+  });
+};
+
+export const logoutAPI = () => {
+  const urlBackend = "/api/v1/auth/logout";
+  return axios.post<IBackendRes<ILogin>>(urlBackend);
+};

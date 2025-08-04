@@ -1,3 +1,4 @@
+import { useCurrentApp } from "@/components/context/app.context";
 import { loginAPI } from "@/services/api";
 import { App, Button, Divider, Form, FormProps, Input } from "antd";
 import { useState } from "react";
@@ -10,20 +11,25 @@ type FieldLoginType = {
 };
 
 const LoginPage = () => {
-  const [isSubmit, setIsSubmit] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { message } = App.useApp();
+  const { setIsAuthenticated, setUser } = useCurrentApp();
+  const [form] = Form.useForm();
+
   const onFinish: FormProps<FieldLoginType>["onFinish"] = async (values) => {
-    setIsSubmit(true);
-    const res = await loginAPI(values.username, values.password);
+    setLoading(true);
+    const res = await loginAPI(values.username || "", values.password || "");
     if (res?.data) {
+      setIsAuthenticated(true);
+      setUser(res.data.user);
       localStorage.setItem('access_token', res.data.access_token);
       message.success("Đăng nhập thành công!");
       navigate("/");
     } else {
       message.error(res.message);
     }
-    setIsSubmit(false);
+    setLoading(false);
   };
   return (
     <div className="login-page">
@@ -34,7 +40,13 @@ const LoginPage = () => {
               <h2 className="text text-large">Đăng nhập</h2>
               <Divider />
             </div>
-            <Form name="form-register" onFinish={onFinish} autoComplete="off">
+            <Form
+              name="form-login"
+              onFinish={onFinish}
+              autoComplete="off"
+              layout="vertical"
+              form={form}
+            >
               <Form.Item<FieldLoginType>
                 labelCol={{ span: 24 }}
                 label="Email"
@@ -52,14 +64,14 @@ const LoginPage = () => {
                 label="Password"
                 name="password"
                 rules={[
-                  { required: true, message: "Password không được để trống!" }
+                  { required: true, message: "Password không được để trống!" },
                 ]}
               >
                 <Input.Password />
               </Form.Item>
 
               <Form.Item>
-                <Button type="primary" htmlType="submit" loading={isSubmit}>
+                <Button type="primary" htmlType="submit" loading={loading}>
                   Đăng nhập
                 </Button>
               </Form.Item>
