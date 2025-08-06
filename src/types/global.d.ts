@@ -48,4 +48,27 @@ declare global {
   interface IFetchAcc{
     user: IUser;
   }
+
+  interface IUserTable{
+    _id: string;
+    fullName: string;
+    email: string;
+    phone: string;
+    role: string;
+    avatar: string;
+    isActive: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+  }
+
+  interface IModelPaginate<T> {
+    meta: {
+      current: number;
+      pageSize: number;
+      pages: number;
+      total: number;
+    };
+    result: T[];
+  }
+
 }

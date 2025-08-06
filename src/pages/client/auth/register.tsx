@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "styles/register.scss";
 import { registerAPI } from "@/services/api";
+import { useForm } from "antd/es/form/Form";
 
 type FieldType = {
   fullName: string;
@@ -13,9 +14,10 @@ type FieldType = {
 };
 
 const RegisterPage = () => {
-  const [isSubmit, setIsSubmit] = useState(false);
+  const [isSubmit, setIsSubmit] = useState<boolean>(false);
   const navigate = useNavigate();
   const { message } = App.useApp();
+  const [formRegister] = useForm();
 
   const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
     setIsSubmit(true)
@@ -27,6 +29,7 @@ const RegisterPage = () => {
     )
     if (res.data) {
       message.success("Đăng ký thành công!")
+      formRegister.resetFields();
       navigate("/login")
     } else {
       message.error(res.message)
@@ -43,7 +46,12 @@ const RegisterPage = () => {
               <h2 className="text text-large">Đăng ký tài khoản</h2>
               <Divider />
             </div>
-            <Form name="form-register" onFinish={onFinish} autoComplete="off">
+            <Form
+              name="form-register"
+              onFinish={onFinish}
+              autoComplete="off"
+              form={formRegister}
+            >
               <Form.Item<FieldType>
                 labelCol={{ span: 24 }}
                 label="Họ tên"

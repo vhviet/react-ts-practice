@@ -75,11 +75,10 @@ const router = createBrowserRouter([
       },
       {
         path: "user",
-        element: (
+        element: 
           <ProtectedRoute>
             <ManageUserPage />
-          </ProtectedRoute>
-        ),
+            </ProtectedRoute>
       },
       {
         path: "/admin",
@@ -110,5 +109,5 @@ createRoot(document.getElementById("root")!).render(
         </ConfigProvider>
       </AppProvider>
     </App>
-  </StrictMode>
+</StrictMode>
 );

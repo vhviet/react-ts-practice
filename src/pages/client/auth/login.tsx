@@ -15,7 +15,7 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const { message } = App.useApp();
   const { setIsAuthenticated, setUser } = useCurrentApp();
-  const [form] = Form.useForm();
+  const [formLogin] = Form.useForm();
 
   const onFinish: FormProps<FieldLoginType>["onFinish"] = async (values) => {
     setLoading(true);
@@ -24,6 +24,7 @@ const LoginPage = () => {
       setIsAuthenticated(true);
       setUser(res.data.user);
       localStorage.setItem('access_token', res.data.access_token);
+      formLogin.resetFields();
       message.success("Đăng nhập thành công!");
       navigate("/");
     } else {
@@ -45,7 +46,7 @@ const LoginPage = () => {
               onFinish={onFinish}
               autoComplete="off"
               layout="vertical"
-              form={form}
+              form={formLogin}
             >
               <Form.Item<FieldLoginType>
                 labelCol={{ span: 24 }}

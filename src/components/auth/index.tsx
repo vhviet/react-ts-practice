@@ -41,10 +41,11 @@ const ProtectedRoute = (props: IProps) => {
             );
         }
   
-  return;
+  return(
     <>
         {props.children}
-    </>;
+    </>
+  )
 };
 
 export default ProtectedRoute;
