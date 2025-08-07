@@ -25,7 +25,7 @@ const LoginPage = () => {
       setUser(res.data.user);
       localStorage.setItem('access_token', res.data.access_token);
       formLogin.resetFields();
-      message.success("Đăng nhập thành công!");
+      message.success("Login successfully!");
       navigate("/");
     } else {
       message.error(res.message);
@@ -38,7 +38,7 @@ const LoginPage = () => {
         <div className="container">
           <section className="wrapper">
             <div className="heading">
-              <h2 className="text text-large">Đăng nhập</h2>
+              <h2 className="text text-large">Login</h2>
               <Divider />
             </div>
             <Form
@@ -53,8 +53,8 @@ const LoginPage = () => {
                 label="Email"
                 name="username"
                 rules={[
-                  { required: true, message: "Email không được để trống!" },
-                  { type: "email", message: "Email sai định dạng!" },
+                  { required: true, message: "Email cannot be empty!" },
+                  { type: "email", message: "Invalid email format!" },
                 ]}
               >
                 <Input />
@@ -65,7 +65,7 @@ const LoginPage = () => {
                 label="Password"
                 name="password"
                 rules={[
-                  { required: true, message: "Password không được để trống!" },
+                  { required: true, message: "Password cannot be empty!" },
                 ]}
               >
                 <Input.Password />
@@ -73,14 +73,14 @@ const LoginPage = () => {
 
               <Form.Item>
                 <Button type="primary" htmlType="submit" loading={loading}>
-                  Đăng nhập
+                  Login now
                 </Button>
               </Form.Item>
 
               <Divider>Or</Divider>
 
               <p className="text text-normal" style={{ textAlign: "center" }}>
-                Chưa có tài khoản ? <Link to={"/register"}>Đăng kí</Link>
+                Not have account ? <Link to={"/register"}>Register</Link>
               </p>
             </Form>
           </section>

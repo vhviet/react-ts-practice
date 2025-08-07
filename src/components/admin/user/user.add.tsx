@@ -33,12 +33,12 @@ const CreateUser = (props: IProps) => {
       refreshTable();
       setIsModalOpen(false);
       notification.success({
-        message: "Thêm người dùng",
-        description: "Thêm người dùng thành công!",
+        message: "Add new user",
+        description: "Add user successfully!",
       });
     } else {
       notification.error({
-        message: "Thêm người dùng!",
+        message: "Add new user!",
         description: res.message,
       });
     }
@@ -49,7 +49,10 @@ const CreateUser = (props: IProps) => {
       <Modal
         title="Add new user"
         open={isModalOpen}
-        onCancel={() => setIsModalOpen(false)}
+        onCancel={() => {
+          setIsModalOpen(false);
+          formAdd.resetFields();
+        }}
         onOk={() => formAdd.submit()}
         okText={"Add"}
       >
@@ -62,9 +65,9 @@ const CreateUser = (props: IProps) => {
         >
           <Form.Item<FieldAddType>
             labelCol={{ span: 24 }}
-            label="Họ tên"
+            label="User name"
             name="fullName"
-            rules={[{ required: true, message: "Họ tên không được để trống" }]}
+            rules={[{ required: true, message: "Fullname cannot be empty!" }]}
           >
             <Input />
           </Form.Item>
@@ -74,8 +77,8 @@ const CreateUser = (props: IProps) => {
             label="Email"
             name="email"
             rules={[
-              { required: true, message: "Email không được để trống" },
-              { type: "email", message: "Email không đúng định dạng" },
+              { required: true, message: "Email cannot be empty!" },
+              { type: "email", message: "Invalid email format!" },
             ]}
           >
             <Input />
@@ -86,11 +89,11 @@ const CreateUser = (props: IProps) => {
             label="Password"
             name="password"
             rules={[
-              { required: true, message: "Password không được để trống" },
+              { required: true, message: "Password cannot be empty!" },
               {
                 pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/,
                 message:
-                  "Password phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt",
+                  "Password must be 8+ characters with upper/lowercase letters, numbers, and special characters!",
               },
             ]}
           >
@@ -99,13 +102,14 @@ const CreateUser = (props: IProps) => {
 
           <Form.Item<FieldAddType>
             labelCol={{ span: 24 }}
-            label="Số điện thoại"
+            label="Phone number"
             name="phone"
             rules={[
-              { required: true, message: "SĐT không được để trống" },
+              { required: true, message: "Phone number cannot be empty!" },
               {
                 pattern: /^0\d{9}$/,
-                message: "SĐT phải bắt đầu bằng số 0 và gồm 10 chữ số",
+                message:
+                  "Phone number must start with 0 and contain 10 digits!",
               },
             ]}
           >

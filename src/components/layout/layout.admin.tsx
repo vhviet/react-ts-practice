@@ -46,7 +46,7 @@ const LayoutAdmin = () => {
       icon: <UserOutlined />,
       children: [
         {
-          label: <Link to="/admin/user">CRUD</Link>,
+          label: <Link to="/admin/user">Users</Link>,
           key: "crud",
           icon: <TeamOutlined />,
         },
@@ -68,19 +68,19 @@ const LayoutAdmin = () => {
     {
       label: (
         <label style={{ cursor: "pointer" }} onClick={() => alert("me")}>
-          Quản lý tài khoản
+          Manage account
         </label>
       ),
       key: "account",
     },
     {
-      label: <Link to={"/"}>Trang chủ</Link>,
+      label: <Link to={"/"}>Home</Link>,
       key: "home",
     },
     {
       label: (
         <label style={{ cursor: "pointer" }} onClick={() => handleLogout()}>
-          Đăng xuất
+          Logout
         </label>
       ),
       key: "logout",
@@ -154,7 +154,7 @@ const LayoutAdmin = () => {
             <Outlet />
           </Content>
           <Footer style={{ padding: 0, textAlign: "center" }}>
-            Book Store &copy; VietVH - Made with <HeartTwoTone />
+            Book Store &copy; VietVH - Made with luv <HeartTwoTone />
           </Footer>
         </Layout>
       </Layout>

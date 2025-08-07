@@ -28,7 +28,7 @@ const RegisterPage = () => {
       values.phone,
     )
     if (res.data) {
-      message.success("Đăng ký thành công!")
+      message.success("Register successfully!")
       formRegister.resetFields();
       navigate("/login")
     } else {
@@ -43,7 +43,7 @@ const RegisterPage = () => {
         <div className="container">
           <section className="wrapper">
             <div className="heading">
-              <h2 className="text text-large">Đăng ký tài khoản</h2>
+              <h2 className="text text-large">Register user</h2>
               <Divider />
             </div>
             <Form
@@ -54,10 +54,10 @@ const RegisterPage = () => {
             >
               <Form.Item<FieldType>
                 labelCol={{ span: 24 }}
-                label="Họ tên"
+                label="Full name"
                 name="fullName"
                 rules={[
-                  { required: true, message: "Họ tên không được để trống" },
+                  { required: true, message: "Full name cannot be empty!" },
                 ]}
               >
                 <Input />
@@ -68,8 +68,8 @@ const RegisterPage = () => {
                 label="Email"
                 name="email"
                 rules={[
-                  { required: true, message: "Email không được để trống" },
-                  { type: "email", message: "Email không đúng định dạng" },
+                  { required: true, message: "Email cannot be empty!" },
+                  { type: "email", message: "Invalid email format!" },
                 ]}
               >
                 <Input />
@@ -80,11 +80,11 @@ const RegisterPage = () => {
                 label="Password"
                 name="password"
                 rules={[
-                  { required: true, message: "Password không được để trống" },
+                  { required: true, message: "Password cannot be empty!" },
                   {
                     pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/,
                     message:
-                      "Password phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt",
+                      "Password must be 8+ characters with upper/lowercase letters, numbers, and special characters!",
                   },
                 ]}
               >
@@ -93,13 +93,14 @@ const RegisterPage = () => {
 
               <Form.Item<FieldType>
                 labelCol={{ span: 24 }}
-                label="Số điện thoại"
+                label="Phone number"
                 name="phone"
                 rules={[
-                  { required: true, message: "SĐT không được để trống" },
+                  { required: true, message: "Phone number cannot be empty!" },
                   {
                     pattern: /^0\d{9}$/,
-                    message: "SĐT phải bắt đầu bằng số 0 và gồm 10 chữ số",
+                    message:
+                      "Phone number must start with 0 and contain 10 digits!",
                   },
                 ]}
               >
@@ -108,14 +109,14 @@ const RegisterPage = () => {
 
               <Form.Item>
                 <Button type="primary" htmlType="submit" loading={isSubmit}>
-                  Đăng ký
+                  Register
                 </Button>
               </Form.Item>
 
               <Divider>Or</Divider>
 
               <p className="text text-normal" style={{ textAlign: "center" }}>
-                Đã có tài khoản ? <Link to={"/login"}>Đăng nhập</Link>
+                Have account ? <Link to={"/login"}>Login here</Link>
               </p>
             </Form>
           </section>

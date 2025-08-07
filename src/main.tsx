@@ -13,9 +13,9 @@ import ProtectedRoute from "@/components/auth";
 import LayoutAdmin from "components/layout/layout.admin";
 import DashBoardPage from "pages/admin/dashboard";
 import { AppProvider } from "components/context/app.context";
-import ManageUserPage from "./pages/admin/manage.user";
-import ManageOrderPage from "./pages/admin/manage.order";
-import ManageBookPage from "./pages/admin/manage.book";
+import ManageUserPage from "pages/admin/manage.user";
+import ManageOrderPage from "pages/admin/manage.order";
+import ManageBookPage from "pages/admin/manage.book";
 import enUS from "antd/lib/locale/en_US";
 
 const router = createBrowserRouter([

@@ -14,7 +14,7 @@ const UserDetail = (props: IProps) => {
     setOpenViewDetail(false);
     setDataViewDetail(null);
   }
-  console.log(typeof dataViewDetail?.createdAt);
+
   return (
     <div>
       <Drawer

@@ -15,7 +15,7 @@ declare global {
       pages: number;
       total: number;
     };
-    results: T[];
+    result: T[];
   }
 
   interface ILogin {
@@ -31,9 +31,9 @@ declare global {
   }
 
   interface IRegister {
-    _id: string,
-    email: string,
-    fullName: string,
+    _id: string;
+    email: string;
+    fullName: string;
   }
 
   interface IUser {
@@ -45,11 +45,11 @@ declare global {
     id: string;
   }
 
-  interface IFetchAcc{
+  interface IFetchAcc {
     user: IUser;
   }
 
-  interface IUserTable{
+  interface IUserTable {
     _id: string;
     fullName: string;
     email: string;
@@ -71,4 +71,9 @@ declare global {
     result: T[];
   }
 
+  interface IUserImport {
+    countSuccess: number;
+    countError: number;
+    detail: any;
+  }
 }

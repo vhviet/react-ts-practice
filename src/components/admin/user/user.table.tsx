@@ -6,8 +6,10 @@ import { ProTable } from "@ant-design/pro-components";
 import { Button } from "antd";
 import { useRef, useState } from "react";
 import UserDetail from "./user.detail";
-import CreateUser from "./user.create";
-import UploadUser from "./user.upload";
+import CreateUser from "./user.add";
+import ImportUser from "./user.import";
+import UpdateUser from "./user.update";
+import { CSVLink } from "react-csv";
 
 type TSearch = {
   fullName: string,
@@ -21,8 +23,13 @@ const TableUser = () => {
   const [dataViewDetail, setDataViewDetail] = useState<IUserTable | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isUploadOpen, setIsUploadOpen] = useState<boolean>(false);
+  const [currentDataTable, setCurrentDataTable] = useState<IUserTable[]>([]);
+  const [openModalUpdate, setOpenModalUpdate] = useState<boolean>(false);
+  const [dataUpdate, setDataUpdate] = useState<IUserTable | null>(null);
+
 
   const actionRef = useRef<ActionType>();
+  
   const [meta, setMeta] = useState({
       current: 1,
       pageSize: 10,
@@ -87,7 +94,7 @@ const TableUser = () => {
       render(dom, entity, index, action, schema) {
         return (
           <div style={{ display: "flex", gap: "20px" }}>
-            <EditOutlined style={{ cursor: "pointer", color: "orange" }} />
+            <EditOutlined style={{ cursor: "pointer", color: "orange" }} onClick={()=>setOpenModalUpdate(true)}/>
             <DeleteOutlined style={{ cursor: "pointer", color: "red" }} />
           </div>
         );
@@ -111,6 +118,8 @@ const TableUser = () => {
     actionRef.current?.reload();
   }
 
+  const handleExportUsers = () => {};
+
   return (
     <>
       <ProTable<IUserTable, TSearch>
@@ -118,7 +127,7 @@ const TableUser = () => {
         actionRef={actionRef}
         cardBordered
         request={async (params, sort, filter) => {
-          await waitTime(300);
+          await waitTime(200);
           console.log(params, sort, filter);
           let query = "";
           if (params) {
@@ -136,17 +145,19 @@ const TableUser = () => {
               query += `&createdAt>=${createDateRange[0]}&createdAt<=${createDateRange[1]}`;
           }
 
-          query += "&sort=-createdAt";
           if (sort && sort.createdAt) {
             query += `&sort=${
               sort.createdAt === "ascend" ? "createdAt" : "-createdAt"
             }`;
-          }
+          } else query += "&sort=-createdAt";
 
           const res = await getUsersAPI(query);
 
           if (res?.data) {
             setMeta(res.data.meta);
+            setCurrentDataTable(
+              (res?.data?.result as unknown as IUserTable[]) ?? []
+            );
           }
           return {
             data: res.data?.result as unknown as IUserTable[],
@@ -178,10 +189,12 @@ const TableUser = () => {
           <Button
             key="button"
             icon={<CloudDownloadOutlined />}
-            onClick={() => alert("hehe")}
+            onClick={() => handleExportUsers()}
             type="primary"
           >
-            Export
+            <CSVLink data={currentDataTable} filename="users-table.csv">
+              Export
+            </CSVLink>
           </Button>,
           <Button
             key="button"
@@ -213,9 +226,18 @@ const TableUser = () => {
         refreshTable={refreshTable}
       />
 
-      <UploadUser
+      <ImportUser
         isUploadOpen={isUploadOpen}
         setIsUploadOpen={setIsUploadOpen}
+        refreshTable={refreshTable}
+      />
+
+      <UpdateUser
+        refreshTable={refreshTable}
+        openModalUpdate={openModalUpdate}
+        setOpenModalUpdate={setOpenModalUpdate}
+        dataUpdate={dataUpdate}
+        setDataUpdate={setDataUpdate}
       />
     </>
   );

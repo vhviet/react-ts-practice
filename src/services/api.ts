@@ -1,4 +1,4 @@
-import axios from 'services/axios.customize'
+import axios from "services/axios.customize";
 
 export const loginAPI = (username: string, password: string) => {
   const urlBackend = "/api/v1/auth/login";
@@ -25,7 +25,7 @@ export const fetchAccountAPI = () => {
   return axios.get<IBackendRes<IFetchAcc>>(urlBackend, {
     headers: {
       delay: 1000,
-    }
+    },
   });
 };
 
@@ -50,6 +50,27 @@ export const addUserAPI = (
     fullName,
     email,
     password,
+    phone,
+  });
+};
+
+export const importUserAPI = (
+  data: {
+    fullName: string;
+    email: string;
+    password: string;
+    phone: string;
+  }[]
+) => {
+  const urlBackend = "/api/v1/user/bulk-create";
+  return axios.post<IBackendRes<IUserImport>>(urlBackend, data);
+};
+
+export const updateUserAPI = (_id: string, fullName: string, phone: string) => {
+  const urlBackend = "/api/v1/user";
+  return axios.put<IBackendRes<IRegister>>(urlBackend, {
+    _id,
+    fullName,
     phone,
   });
 };

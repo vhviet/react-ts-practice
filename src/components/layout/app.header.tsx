@@ -31,19 +31,19 @@ const AppHeader = () => {
     {
       label: (
         <label style={{ cursor: "pointer" }} onClick={() => alert("me")}>
-          Quản lý tài khoản
+          Manage account
         </label>
       ),
       key: "account",
     },
     {
-      label: <Link to="/history">Lịch sử mua hàng</Link>,
+      label: <Link to="/history">Orders history</Link>,
       key: "history",
     },
     {
       label: (
         <label style={{ cursor: "pointer" }} onClick={() => handleLogout()}>
-          Đăng xuất
+          Logout
         </label>
       ),
       key: "logout",
@@ -51,7 +51,7 @@ const AppHeader = () => {
   ];
   if (user?.role === "ADMIN") {
     items.unshift({
-      label: <Link to="/admin">Trang quản trị</Link>,
+      label: <Link to="/admin">Administrator</Link>,
       key: "admin",
     });
   }
