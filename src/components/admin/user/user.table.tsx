@@ -1,47 +1,76 @@
-import { getUsersAPI } from "@/services/api";
+import deleteUserAPI, { getUsersAPI } from "@/services/api";
 import { dateRangeValidate } from "@/services/helper";
-import { CloudDownloadOutlined, CloudUploadOutlined, DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
+import {
+  CloudDownloadOutlined,
+  CloudUploadOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
 import type { ActionType, ProColumns } from "@ant-design/pro-components";
 import { ProTable } from "@ant-design/pro-components";
-import { Button } from "antd";
+import { App, Button, Popconfirm } from "antd";
 import { useRef, useState } from "react";
 import UserDetail from "./user.detail";
 import CreateUser from "./user.add";
 import ImportUser from "./user.import";
 import UpdateUser from "./user.update";
 import { CSVLink } from "react-csv";
+import { PopconfirmProps } from "antd/lib";
+import { SortOrder } from "antd/es/table/interface";
 
 type TSearch = {
-  fullName: string,
-  email: string,
-  createdAt: string,
-  createdAtRange: string,
-}
+  fullName: string;
+  email: string;
+  createdAt: string;
+  createdAtRange: string;
+};
 
 const TableUser = () => {
   const [openViewDetail, setOpenViewDetail] = useState<boolean>(false);
   const [dataViewDetail, setDataViewDetail] = useState<IUserTable | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [isUploadOpen, setIsUploadOpen] = useState<boolean>(false);
+  const [isUploadOpen,   setIsUploadOpen] = useState<boolean>(false);
   const [currentDataTable, setCurrentDataTable] = useState<IUserTable[]>([]);
   const [openModalUpdate, setOpenModalUpdate] = useState<boolean>(false);
   const [dataUpdate, setDataUpdate] = useState<IUserTable | null>(null);
-
+  const { notification, message } = App.useApp();
 
   const actionRef = useRef<ActionType>();
-  
+
   const [meta, setMeta] = useState({
-      current: 1,
-      pageSize: 10,
-      pages: 0,
-      total: 0,
-  })
+    current: 1,
+    pageSize: 10,
+    pages: 0,
+    total: 0,
+  });
+
+  const handleConfirm = async (_id: string) => {
+    const res = await deleteUserAPI(_id);
+    if (res?.data) {
+      refreshTable();
+      notification.success({
+        message: "Delete user",
+        description: `Deleted successfully! user ${_id}`
+      })
+    } else {
+      notification.error({
+        message: "Detele user",
+        description: JSON.stringify(res.message)
+      })
+    }
+  };
+
+  const handleCancel: PopconfirmProps["onCancel"] = () => {
+    message.success("Cancelled delete user!", 1);
+  };
 
   const columns: ProColumns<IUserTable>[] = [
     {
+      title: "No.",
       dataIndex: "index",
       valueType: "indexBorder",
-      width: 48,
+      width: 48, 
     },
     {
       title: "Id",
@@ -53,15 +82,14 @@ const TableUser = () => {
         return (
           <a
             href="#"
-            onClick={
-              () => {
-                setDataViewDetail(entity);
-                setOpenViewDetail(true);
-              }
-            }
+            onClick={() => {
+              setDataViewDetail(entity);
+              setOpenViewDetail(true);
+            }}
           >
             {entity._id}
-          </a>);
+          </a>
+        );
       },
     },
     {
@@ -94,8 +122,24 @@ const TableUser = () => {
       render(dom, entity, index, action, schema) {
         return (
           <div style={{ display: "flex", gap: "20px" }}>
-            <EditOutlined style={{ cursor: "pointer", color: "orange" }} onClick={()=>setOpenModalUpdate(true)}/>
-            <DeleteOutlined style={{ cursor: "pointer", color: "red" }} />
+            <EditOutlined
+              style={{ cursor: "pointer", color: "orange" }}
+              onClick={() => {
+                setOpenModalUpdate(true);
+                setDataUpdate(entity);
+              }}
+            />
+
+            <Popconfirm
+              title="Delete user"
+              description="Are you sure to delete this user?"
+              onConfirm={() => handleConfirm(entity._id)}
+              onCancel={handleCancel}
+              okText="Yes"
+              cancelText="No"
+            >
+              <DeleteOutlined style={{ cursor: "pointer", color: "red" }} />
+            </Popconfirm>
           </div>
         );
       },
@@ -116,9 +160,7 @@ const TableUser = () => {
 
   const refreshTable = () => {
     actionRef.current?.reload();
-  }
-
-  const handleExportUsers = () => {};
+  };
 
   return (
     <>
@@ -129,29 +171,48 @@ const TableUser = () => {
         request={async (params, sort, filter) => {
           await waitTime(200);
           console.log(params, sort, filter);
-          let query = "";
-          if (params) {
-            query += `current=${params.current}&pageSize=${params.pageSize}`;
-            if (params.email) {
-              query += `&email=/${params.email}/i`;
+          const buildQuery = (
+            params: TSearch & {
+              pageSize?: number;
+              current?: number;
+              keyword?: string;
+            },
+            sort: Record<string, SortOrder>
+          ): string => {
+            const queryParts: string[] = [];
+
+            // Pagination
+            if (params.current) queryParts.push(`current=${params.current}`);
+            if (params.pageSize) queryParts.push(`pageSize=${params.pageSize}`);
+
+            // Keyword search (optional)
+            // if (params.keyword) {
+            //   queryParts.push(`keyword=/${params.keyword}/i`);
+            // }
+
+            // Specific filters
+            if (params.email) queryParts.push(`email=/${params.email}/i`);
+            if (params.fullName)
+              queryParts.push(`fullName=/${params.fullName}/i`);
+
+            // Date range
+            const dateRange = dateRangeValidate(params.createdAtRange);
+            if (params.createdAtRange && dateRange) {
+              queryParts.push(`createdAt>=${dateRange[0]}`);
+              queryParts.push(`createdAt<=${dateRange[1]}`);
             }
 
-            if (params.fullName) {
-              query += `&fullName=/${params.fullName}/i`;
-            }
+            // Sorting
+            const sortKey =
+              sort?.createdAt === "ascend" ? "createdAt" : "-createdAt";
+            queryParts.push(`sort=${sortKey}`);
 
-            const createDateRange = dateRangeValidate(params.createdAtRange);
-            if (params.createdAtRange && createDateRange)
-              query += `&createdAt>=${createDateRange[0]}&createdAt<=${createDateRange[1]}`;
-          }
+            return queryParts.join("&");
+          };
 
-          if (sort && sort.createdAt) {
-            query += `&sort=${
-              sort.createdAt === "ascend" ? "createdAt" : "-createdAt"
-            }`;
-          } else query += "&sort=-createdAt";
-
+          const query = buildQuery(params, sort);
           const res = await getUsersAPI(query);
+          
 
           if (res?.data) {
             setMeta(res.data.meta);
@@ -189,7 +250,6 @@ const TableUser = () => {
           <Button
             key="button"
             icon={<CloudDownloadOutlined />}
-            onClick={() => handleExportUsers()}
             type="primary"
           >
             <CSVLink data={currentDataTable} filename="users-table.csv">
@@ -214,6 +274,7 @@ const TableUser = () => {
           </Button>,
         ]}
       />
+      
       <UserDetail
         openViewDetail={openViewDetail}
         setOpenViewDetail={setOpenViewDetail}

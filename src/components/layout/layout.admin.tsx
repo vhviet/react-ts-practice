@@ -4,7 +4,7 @@ import {
   ExceptionOutlined,
   HeartTwoTone,
   TeamOutlined,
-  UserOutlined,
+  // UserOutlined,
   DollarCircleOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -40,17 +40,22 @@ const LayoutAdmin = () => {
       key: "dashboard",
       icon: <AppstoreOutlined />,
     },
+    // {
+    //   label: <span>Manage Users</span>,
+    //   key: "user",
+    //   icon: <UserOutlined />,
+    //   children: [
+    //     {
+    //       label: <Link to="/admin/user">Users</Link>,
+    //       key: "crud",
+    //       icon: <TeamOutlined />,
+    //     },
+    //   ],
+    // },
     {
-      label: <span>Manage Users</span>,
+      label: <Link to="/admin/user">Manage Users</Link>,
       key: "user",
-      icon: <UserOutlined />,
-      children: [
-        {
-          label: <Link to="/admin/user">Users</Link>,
-          key: "crud",
-          icon: <TeamOutlined />,
-        },
-      ],
+      icon: <TeamOutlined />
     },
     {
       label: <Link to="/admin/book">Manage Books</Link>,

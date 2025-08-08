@@ -1,5 +1,7 @@
+import BoookTable from "@/components/admin/book/book.table";
+
 const ManageBookPage = () => {
-  return <div>ManageBookPage</div>;
+  return <><BoookTable/></>;
 };
 
 export default ManageBookPage;

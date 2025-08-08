@@ -1,12 +1,15 @@
-import { Divider, Form, Input, Modal } from "antd";
+import { updateUserAPI } from "@/services/api";
+import { App, Divider, Form, Input, Modal } from "antd";
 import { useForm } from "antd/es/form/Form";
+import { FormProps } from "antd/lib";
+import { useEffect, useState } from "react";
 
 interface IProps {
   openModalUpdate: boolean;
   setOpenModalUpdate: (v: boolean) => void;
   refreshTable: () => void;
   dataUpdate: IUserTable | null;
-  setDataUpdate: (v: IUserTable) => void;
+  setDataUpdate: (v: IUserTable | null) => void;
 }
 
 interface FieldUpdateType{
@@ -23,27 +26,65 @@ const UpdateUser = (props: IProps) => {
       refreshTable,
       dataUpdate,
       setDataUpdate,
-    } = props;
-    console.log(
-      openModalUpdate,
-      setOpenModalUpdate,
-      refreshTable,
-      dataUpdate,
-      setDataUpdate
-    );
+  } = props;
+  
   const [formUpdate] = useForm();
-  const onFinish = () => {};
+  const { notification, message } = App.useApp();
+  const [isSubmit, setIsSubmit] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (dataUpdate) {
+      formUpdate.setFieldsValue({
+        ...dataUpdate
+       });
+    }
+  }, [dataUpdate])
+  
+  const onFinish: FormProps<FieldUpdateType>["onFinish"] = async (values) => {
+    const { _id, fullName, phone } = values;
+    if (fullName === dataUpdate?.fullName && phone === dataUpdate?.phone ) {
+      message.error(
+        "Please enter name/phone number different from the current info!", 1
+      );
+      return
+    }
+    setIsSubmit(true);
+    const res = await updateUserAPI(_id, fullName, phone);
+    if (res?.data) {
+      formUpdate.resetFields();
+      setDataUpdate(null);
+      setOpenModalUpdate(false);
+      refreshTable();
+      notification.success({
+        message: "Update user!",
+        description: `You have updated user ${res.data._id} successfully!`,
+      });
+    } else {
+      notification.error({
+        message: "Update user!",
+        description: JSON.stringify(res.message),
+      });
+    }
+    setIsSubmit(false);
+  };
+  
   return (
     <>
       <Modal
         title="Update user"
-        open={true}
+        open={openModalUpdate}
         onCancel={() => {
           setOpenModalUpdate(false);
+          setDataUpdate(null);
           formUpdate.resetFields();
         }}
         onOk={() => formUpdate.submit()}
         okText={"Update"}
+        okButtonProps={
+          {
+            loading: isSubmit
+          }
+        }
       >
         <Divider />
         <Form
@@ -54,12 +95,16 @@ const UpdateUser = (props: IProps) => {
         >
           <Form.Item<FieldUpdateType>
             labelCol={{ span: 24 }}
+            label="Id"
+            name="_id"
+            // hidden
+          >
+            <Input disabled />
+          </Form.Item>
+          <Form.Item<FieldUpdateType>
+            labelCol={{ span: 24 }}
             label="Email"
             name="email"
-            rules={[
-              { required: true, message: "Email cannot be empty!" },
-              { type: "email", message: "Invalid email format!" },
-            ]}
           >
             <Input disabled />
           </Form.Item>

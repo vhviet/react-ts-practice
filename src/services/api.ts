@@ -74,3 +74,14 @@ export const updateUserAPI = (_id: string, fullName: string, phone: string) => {
     phone,
   });
 };
+
+const deleteUserAPI = (_id: string) => {
+  const urlBackend = `/api/v1/user/${_id}`;
+  return axios.delete<IBackendRes<ILogin>>(urlBackend)
+}
+export default deleteUserAPI;
+
+export const getBooksAPI = (query: string) => {
+  const urlBackend = `/api/v1/book?${query}`;
+  return axios.get<IBackendRes<IModelPaginate<IBook>>>(urlBackend);
+};

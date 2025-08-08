@@ -28,11 +28,11 @@ const RegisterPage = () => {
       values.phone,
     )
     if (res.data) {
-      message.success("Register successfully!")
+      message.success("Register successfully!", 1)
       formRegister.resetFields();
       navigate("/login")
     } else {
-      message.error(res.message)
+      message.error(res.message, 2)
     }
     setIsSubmit(false)
   };

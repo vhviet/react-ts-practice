@@ -25,10 +25,10 @@ const LoginPage = () => {
       setUser(res.data.user);
       localStorage.setItem('access_token', res.data.access_token);
       formLogin.resetFields();
-      message.success("Login successfully!");
+      message.success("Login successfully!", 2);
       navigate("/");
     } else {
-      message.error(res.message);
+      message.error(res.message, 2);
     }
     setLoading(false);
   };
