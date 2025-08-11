@@ -77,69 +77,77 @@ const BookDetail = (props: IProps) => {
 
     const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) =>
         setFileList(newFileList);
-
+console.log(previewImage);
     return (
-        <>
-            <Drawer
-                title="Book Details"
-                width={"50vw"}
-                open={openBookDetail}
-                onClose={() => handleClose()}
-            >
-                <Descriptions title={`Book ${viewBookDetail?._id}`} column={1} bordered>
-                    <Descriptions.Item label="Id">
-                        {viewBookDetail?._id}
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Book name">
-                        {viewBookDetail?.mainText}
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Author">
-                        {viewBookDetail?.author}
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Price">
-                        {viewBookDetail?.price.toLocaleString("vi-VN", {
-                            style: "currency",
-                            currency: "VND",
-                        })}
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Category">
-                        <Badge status="processing" text={viewBookDetail?.category} />
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Created at">
-                        {viewBookDetail?.createdAt
-                            ? dayjs(viewBookDetail.createdAt).format(FORMAT_DATE_VN)
-                            : ""}
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Updated at">
-                        {viewBookDetail?.updatedAt
-                            && dayjs(viewBookDetail.updatedAt).format(FORMAT_DATE_VN)}
-                    </Descriptions.Item>
-                </Descriptions>
-                <Divider orientation="left" style={{ fontSize: "14px", fontWeight: "normal" }}>Book Images</Divider>
-                <Upload
-                    action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
-                    listType="picture-card"
-                    fileList={fileList}
-                    onPreview={handlePreview}
-                    onChange={handleChange}
-                    showUploadList={{ showRemoveIcon: false }}
-                >
-                </Upload>
+      <>
+        <Drawer
+          title="Book Details"
+          width={"50vw"}
+          open={openBookDetail}
+          onClose={() => handleClose()}
+        >
+          <Descriptions
+            title={`${viewBookDetail?.mainText}`}
+            column={1}
+            bordered
+          >
+            <Descriptions.Item label="Id">
+              {viewBookDetail?._id}
+            </Descriptions.Item>
+            <Descriptions.Item label="Book name">
+              {viewBookDetail?.mainText}
+            </Descriptions.Item>
+            <Descriptions.Item label="Author">
+              {viewBookDetail?.author}
+            </Descriptions.Item>
+            <Descriptions.Item label="Price">
+              {viewBookDetail?.price.toLocaleString("vi-VN", {
+                style: "currency",
+                currency: "VND",
+              })}
+            </Descriptions.Item>
+            <Descriptions.Item label="Category">
+              <Badge status="processing" text={viewBookDetail?.category} />
+            </Descriptions.Item>
+            <Descriptions.Item label="Created at">
+              {viewBookDetail?.createdAt
+                ? dayjs(viewBookDetail.createdAt).format(FORMAT_DATE_VN)
+                : ""}
+            </Descriptions.Item>
+            <Descriptions.Item label="Updated at">
+              {viewBookDetail?.updatedAt &&
+                dayjs(viewBookDetail.updatedAt).format(FORMAT_DATE_VN)}
+            </Descriptions.Item>
+          </Descriptions>
+          <Divider
+            orientation="left"
+            style={{ fontSize: "14px", fontWeight: "normal" }}
+          >
+            Book Images
+          </Divider>
+          <Upload
+            action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+            listType="picture-card"
+            fileList={fileList}
+            onPreview={handlePreview}
+            onChange={handleChange}
+            showUploadList={{ showRemoveIcon: false }}
+          ></Upload>
 
-                {previewImage && (
-                    <Image
-                        style={{ display: 'none' }}
-                        preview={{
-                            visible: previewOpen,
-                            onVisibleChange: setPreviewOpen,
-                            afterOpenChange: (visible) => !visible && setPreviewImage(''),
-                        }}
-                        src={previewImage}
-                    />
-                )}
-            </Drawer>
-        </>
-    )
+          {previewImage && (
+            <Image
+              style={{ display: "none" }}
+              preview={{
+                visible: previewOpen,
+                onVisibleChange: (visible) => setPreviewOpen(visible),
+                afterOpenChange: (visible) => !visible && setPreviewImage(""),
+              }}
+              src={previewImage}
+            />
+          )}
+        </Drawer>
+      </>
+    );
 }
 
 export default BookDetail

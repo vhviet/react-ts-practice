@@ -91,5 +91,15 @@ declare global {
     updatedAt: Date;
   }
 
-  
+  interface IBookAdd {
+    thumbnail: string;
+    slider: string[];
+    mainText: string;
+    author: string;
+    price: number;
+    quantity: number;
+    category: string;
+    createdAt: Date;
+    updatedAt: Date;
+  }
 }

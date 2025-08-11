@@ -162,10 +162,14 @@ const BoookTable = () => {
     });
   };
 
+  const refreshTable = () => {
+    actionRef.current?.reload();
+  };
+
   return (
     <>
       {/* Display list books */}
-      <ProTable<IUserTable, TSearchBook>
+      <ProTable<IBookTable, TSearchBook>
         columns={columns}
         actionRef={actionRef}
         cardBordered
@@ -209,7 +213,7 @@ const BoookTable = () => {
           };
 
           const query = buildQuery(params, sort);
-          const res = await getBooksAPI(query); 
+          const res = await getBooksAPI(query);
 
           if (res?.data) {
             setMeta(res.data.meta);
@@ -271,6 +275,7 @@ const BoookTable = () => {
       <BookAdd
         openAddBook={openAddBook}
         setOpenAddBook={setOpenAddBook}
+        refreshTable={refreshTable}
       />
     </>
   );

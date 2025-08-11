@@ -11,6 +11,13 @@ export default defineConfig({
   plugins: [react(), tsconfigPaths()],
   server: {
     port: 3000,
+    proxy: {
+      "/api": {
+        target: "https://bookstore-backend-q87g.onrender.com",
+        changeOrigin: true,
+        secure: false,
+      },
+    },
   },
   css: {
     preprocessorOptions: {

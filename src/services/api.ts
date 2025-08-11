@@ -77,8 +77,8 @@ export const updateUserAPI = (_id: string, fullName: string, phone: string) => {
 
 const deleteUserAPI = (_id: string) => {
   const urlBackend = `/api/v1/user/${_id}`;
-  return axios.delete<IBackendRes<ILogin>>(urlBackend)
-}
+  return axios.delete<IBackendRes<ILogin>>(urlBackend);
+};
 export default deleteUserAPI;
 
 export const getBooksAPI = (query: string) => {
@@ -89,4 +89,40 @@ export const getBooksAPI = (query: string) => {
 export const getCategoryAPI = () => {
   const urlBackend = "/api/v1/database/category";
   return axios.get<IBackendRes<string[]>>(urlBackend);
-}
+};
+
+// Upload book images
+export const uploadFileBookAPI = (fileImg: any, folderName: string) => {
+  const bodyFormData = new FormData();
+  bodyFormData.append("fileImg", fileImg);
+  return axios<IBackendRes<{ fileUploaded: string }>>({
+    method: "post",
+    url: "/api/v1/file/upload",
+    data: bodyFormData,
+    headers: {
+      "Content-Type": "multipart/form-data",
+      "upload-type": folderName,
+    },
+  });
+};
+
+export const addBookAPI = (
+  thumbnail: string,
+  slider: string[],
+  mainText: string,
+  author: string,
+  price: number,
+  quantity: number,
+  category: string
+) => {
+  const urlBackend = "/api/v1/book";
+  return axios.post<IBackendRes<IBookAdd>>(urlBackend, {
+    thumbnail,
+    slider,
+    mainText,
+    author,
+    price,
+    quantity,
+    category,
+  });
+};
