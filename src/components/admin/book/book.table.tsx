@@ -12,6 +12,10 @@ import { SortOrder } from "antd/es/table/interface";
 import { PopconfirmProps } from "antd/lib";
 import { useRef, useState } from "react";
 import { CSVLink } from "react-csv";
+import BookDetail from "./book.detail";
+import dayjs from "dayjs";
+import { FORMAT_DATE_VN } from "@/services/helper";
+import BookAdd from "./book.add";
 
 type TSearchBook = {
   mainText: string;
@@ -19,21 +23,21 @@ type TSearchBook = {
 };
 
 const BoookTable = () => {
-  const actionRef = useRef<ActionType>();
-  const { notification, message } = App.useApp();
-  const [viewBookDetail, setViewBookDetail] = useState<IBookTable | null>(null);
   const [openBookDetail, setOpenBookDetail] = useState<boolean>(false);
+  const [viewBookDetail, setViewBookDetail] = useState<IBookTable | null>(null);
   const [openAddBook, setOpenAddBook] = useState<boolean>(false);
   const [currentDataBookTb, setCurrentDataBookTb] = useState<IBookTable[]>([]);
   const [openBookUpdate, setOpenBookUpdate] = useState<boolean>(false);
   const [dataBookUpdate, setDataBookUpdate] = useState<IBookTable | null>(null);
-
   const [meta, setMeta] = useState({
     current: 1,
     pageSize: 10,
     pages: 0,
     total: 0,
   });
+
+  const actionRef = useRef<ActionType>();
+  const { notification, message } = App.useApp();
 
   const columns: ProColumns<IBookTable>[] = [
     {
@@ -83,10 +87,10 @@ const BoookTable = () => {
       sorter: true,
       hideInSearch: true,
       render: (_, entity) =>
-        entity.price?.toLocaleString("vi-VN", {
+        entity.price.toLocaleString("vi-VN", {
           style: "currency",
           currency: "VND",
-        }) ?? "—",
+        }),
     },
     {
       title: "Created At",
@@ -94,6 +98,8 @@ const BoookTable = () => {
       valueType: "date",
       sorter: true,
       hideInSearch: true,
+      render: (_, entity) =>
+       dayjs(entity.createdAt).format(FORMAT_DATE_VN)
     },
     {
       title: "Action",
@@ -114,6 +120,7 @@ const BoookTable = () => {
             <Popconfirm
               title="Delete book"
               description="Are you sure to delete this book?"
+              placement="left"
               onConfirm={() => handleConfirm(entity._id)}
               onCancel={handleCancel}
               okText="Yes"
@@ -157,6 +164,7 @@ const BoookTable = () => {
 
   return (
     <>
+      {/* Display list books */}
       <ProTable<IUserTable, TSearchBook>
         columns={columns}
         actionRef={actionRef}
@@ -186,30 +194,8 @@ const BoookTable = () => {
             if (params.author) queryParts.push(`author=/${params.author}/i`);
 
             // Sorting
-            // const sortFields = [
-            //   { key: "mainText", order: sort.mainText },
-            //   { key: "author", order: sort.author },
-            //   { key: "price", order: sort.price },
-            //   { key: "createdAt", order: sort.createdAt },
-            // ];
-
-            // const firstSort = sortFields.find(
-            //   ({ order }) => order === "ascend" || order === "descend"
-            // );
-
-            // const querySort = firstSort
-            //   ? `sort=${
-            //       firstSort.order === "ascend"
-            //         ? firstSort.key
-            //         : `-${firstSort.key}`
-            //     }`
-            //   : "sort=-createdAt";
-
-            // queryParts.push(querySort);
             const sortKeys = ["createdAt", "mainText", "author", "price"];
-
             let querySort = "sort=-createdAt"; // default
-
             for (const key of sortKeys) {
               const order = sort[key];
               if (order === "ascend" || order === "descend") {
@@ -217,9 +203,7 @@ const BoookTable = () => {
                 break;
               }
             }
-
             queryParts.push(querySort);
-
 
             return queryParts.join("&");
           };
@@ -265,14 +249,6 @@ const BoookTable = () => {
               Export
             </CSVLink>
           </Button>,
-          // <Button
-          //   key="button"
-          //   icon={<CloudUploadOutlined />}
-          //   onClick={() => setIsUploadOpen(true)}
-          //   type="primary"
-          // >
-          //   Import
-          // </Button>,
           <Button
             key="button"
             icon={<PlusOutlined />}
@@ -282,6 +258,19 @@ const BoookTable = () => {
             Add new
           </Button>,
         ]}
+      />
+
+      {/* View Book details */}
+      <BookDetail
+        openBookDetail={openBookDetail}
+        setOpenBookDetail={setOpenBookDetail}
+        viewBookDetail={viewBookDetail}
+        setViewBookDetail={setViewBookDetail}
+      />
+
+      <BookAdd
+        openAddBook={openAddBook}
+        setOpenAddBook={setOpenAddBook}
       />
     </>
   );

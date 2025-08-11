@@ -16,7 +16,7 @@ const UserDetail = (props: IProps) => {
   }
 
   return (
-    <div>
+    <>
       <Drawer
         title="User Details"
         width={"50vw"}
@@ -56,7 +56,7 @@ const UserDetail = (props: IProps) => {
           </Descriptions.Item>
         </Descriptions>
       </Drawer>
-    </div>
+    </>
   );
 }
 

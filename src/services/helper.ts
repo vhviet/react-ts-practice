@@ -2,6 +2,10 @@ import dayjs from "dayjs";
 
 export const FORMAT_DATE = "YYYY-MM-DD";
 
+export const FORMAT_DATE_VN = "DD-MM-YYYY";
+
+export const FILE_SIZE_MAX = 2;
+
 export const dateRangeValidate = (dateRange: any): [Date, Date] | undefined => {
   if (!dateRange || dateRange.length !== 2) return undefined;
 
